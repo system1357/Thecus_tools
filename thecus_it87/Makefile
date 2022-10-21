@@ -28,9 +28,6 @@ SYSTEM_MAP = /proc/kallsyms
 endif
 
 DRIVER := thecus_it87
-ifneq ("","$(wildcard .git/*)")
-DRIVER_VERSION := $(shell git describe --long)
-else
 ifneq ("", "$(wildcard VERSION)")
 DRIVER_VERSION := $(shell cat VERSION)
 else
