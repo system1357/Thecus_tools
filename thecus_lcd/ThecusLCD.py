@@ -1,9 +1,12 @@
 import serial
 import struct
-import time
+import platform
 
 class ThecusLCD:
-    ser = serial.Serial('/dev/ttyS0', 115200)
+    if platform.system() == 'Windows':
+        ser = serial.Serial('COM1', 115200)
+    else:
+        ser = serial.Serial('/dev/ttyS0', 115200)
     ser.timeout = 10
     ser.writeTimeout = 5
     ser.bytesize = serial.EIGHTBITS

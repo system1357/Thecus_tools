@@ -9,15 +9,21 @@ Python script for controlling N4810's front LCD panel
 
 ## Tips
 ### 1. GPIO:  
-N4810 has 4 red HDD error LEDs and two USB status LEDs
-- HDD0: GPIO 853
-- HDD1: GPIO 856
-- HDD2: GPIO 860
-- HDD3: GPIO 854
-- USB Green: GPIO 859
-- USB Red: GPIO 861  
+N4810 has 4 red HDD error LEDs and two USB status LEDs all wired to gpiochip1  
+N2810 has identical arrangements, but only 2 HDD error LEDs(HDD0, HDD1)
+- HDD0: GPIO 0
+- HDD1: GPIO 3
+- HDD2: GPIO 7
+- HDD3: GPIO 1
+- USB Green: GPIO 6
+- USB Red: GPIO 8  
 
-All LEDs are active-low, means you have to echo 0 to turn it on  
+The leds can be controlled via gpioset:  
+```
+gpioset 1 a=b
+```  
+a: GPIO pin  
+b: state(0=on, 1=off)
 
 ### 2. lm-sensors  
 Pwmconfig can detect all inputs and outputs normally, but the script will think pwm2 and pwm3 both control the fan(which is actually pwm2 only)  

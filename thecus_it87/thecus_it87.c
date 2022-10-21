@@ -59,7 +59,7 @@
 #include <linux/acpi.h>
 #include <linux/io.h>
 #include <linux/uaccess.h>
-#include <linux/pm.h>
+
 #define DRVNAME "it87"
 
 #define THECUS_ITE 1
@@ -68,7 +68,8 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #define THECUS_ITE_VER "0.2"
-#define ITE_DRIVER_NAME "ITE SENSOR CHIP's Hardware Monitor, v" THECUS_ITE_VER
+#define ITE_DRIVER_NAME "Thecus ITE SuperIO Driver, Ver" THECUS_ITE_VER
+
 #endif
 
 enum chips { it87, it8712, it8716, it8718, it8720, it8721, it8728, it8732,
@@ -2660,9 +2661,8 @@ static void it8616_default_config_set(struct it87_data *data)
 	it8616_pwr_led_set(0, 2);
 	/* EuP configure */
 	it8616_pme_superio_write(EUPREG, 0x14);
-	/* The EuP superio should not be reset, so we set
-	 * the flag to 1 on Braswell model. */
 }
+
 /* SuperIO detection - will change isa_address if a chip is found */
 static int __init it87_find(int sioaddr, unsigned short *address,
 			    struct it87_sio_data *sio_data)
@@ -3540,7 +3540,7 @@ static int thecus_proc_it87_show(struct seq_file *m, void *v)
 	u16 type = get_device_id();
 
 	struct it87_data *data = it87_update_device(&it87_pdev[0]->dev);
-	seq_printf(m, "Display ITE CHIP Info Ver.%s\n", THECUS_ITE_VER);
+	seq_printf(m, "Thecus ITE SuperIO Driver Ver %s\n", THECUS_ITE_VER);
 
 	switch (type) {
 		case IT8616E_DEVID:
@@ -3550,11 +3550,7 @@ static int thecus_proc_it87_show(struct seq_file *m, void *v)
 			seq_printf(m,"EUP: %x\n", it8616_EUP_status_read());
 			break;
 		default:
-			seq_printf(m,"HDD_FAN1 RPM: %d\n", 0);
-			seq_printf(m,"HDD_FAN2 RPM: %d\n", 0);
-			seq_printf(m,"CPU_TEMP: %d\n", 25);
-			seq_printf(m,"SAS_TEMP: %d\n", 25);
-			seq_printf(m,"SYS_TEMP: %d\n", 25);
+			seq_printf(m,"No compatible IT8616E found");
 			break;
 	}
 	return 0;

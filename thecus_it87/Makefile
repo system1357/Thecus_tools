@@ -2,8 +2,6 @@
 ifndef TARGET
 TARGET = $(shell uname -r)
 endif
-# Or specific version
-#TARGET = 2.6.33.5
 
 KERNEL_MODULES = /lib/modules/$(TARGET)
 
