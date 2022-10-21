@@ -33,7 +33,6 @@ DRIVER_VERSION := $(shell cat VERSION)
 else
 DRIVER_VERSION := unknown
 endif
-endif
 
 # DKMS
 DKMS_ROOT_PATH=/usr/src/$(DRIVER)-$(DRIVER_VERSION)
