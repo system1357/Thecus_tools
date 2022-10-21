@@ -21,18 +21,18 @@ LED control can be carried out using the below command
 ```
 echo "SLED a b c" > /proc/hwm
 ```
-a:
-1 ==> read status
-2 ==> control LED
+a:  
+1 ==> read status  
+2 ==> control LED  
 	
-b:
-0 ==> blue LED
-1 ==> red LED
+b:  
+0 ==> blue LED  
+1 ==> red LED  
 
-c:
-0 ==> off
-1 ==> on
-2 ==> blink
+c:  
+0 ==> off  
+1 ==> on  
+2 ==> blink  
 
 ## Known issues
 - When the driver loads, blue LED defaults to blinking
