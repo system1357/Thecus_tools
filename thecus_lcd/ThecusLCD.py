@@ -77,6 +77,8 @@ class ThecusLCD:
             state = 'Enter'
         elif key == b'\xa1\x04\x04\x01':
             state = 'Esc'
+        elif key == b'':
+            state = 'keep_alive'
         else:
             print("Unknown key: ", str(key))
             state = 'unknown'

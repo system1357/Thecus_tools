@@ -16,9 +16,9 @@ N2810/Pro/Plus has identical arrangements, but only 2 HDD error LEDs(HDD0, HDD1)
 - HDD1: GPIO 3
 - HDD2: GPIO 7
 - HDD3: GPIO 1
-- USB Green(N4810): GPIO 6
+- USB Green(N4810): GPIO 8
 - USB Green(N2810): GPIO 18
-- USB Red: GPIO 8  
+- USB Red: GPIO 6  
 
 The leds can be controlled via gpioset:  
 ```
