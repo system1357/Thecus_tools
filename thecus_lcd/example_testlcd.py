@@ -79,22 +79,6 @@ def runfunc(num):
         cmdlock = False
         return False
 
-def handlebtn(btn):
-    print(btn)
-    if btn == 'Enter':
-            runfunc(menuloc)
-            print(btn)
-    elif btn == 'Esc':
-        lcd.show_lcd('Testing LCM & HW', 'Quit Test?')
-        if btn == 'Enter':
-            lcd.show_lcd('Thecus NAS', 'Ready')
-            print('Exit script, GoodBye')
-            exit(0)
-        elif btn == 'Esc':
-            lcd.show_lcd('Testing LCM & HW', menuloop(btn))
-    else:
-        lcd.show_lcd('Testing LCM & HW', menuloop(btn))
-
 if __name__ == '__main__':
     signal(SIGINT, handler)
     print('Testing LCM & HW. Press CTRL-C to exit.')
