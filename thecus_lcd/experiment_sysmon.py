@@ -2,8 +2,8 @@ from time import sleep
 from ThecusLCD import ThecusLCD
 from signal import signal, SIGINT
 from sys import exit
+import threading
 from threading import Timer
-import time
 import os
 import socket
 import re
@@ -13,6 +13,7 @@ menuloc2 = 0
 escstat = False
 cmdlock = False
 testmode = False
+runthread = False
 bltimer = 0
 
 menu_items = {0: 'Tog. Backlight',
@@ -22,20 +23,34 @@ menu_items = {0: 'Tog. Backlight',
     4: 'Tog. USB REDLED'}
 
 def handler(signal_received, frame):
+    global runthread
+    if runthread == True:
+        runthread = False
+        t3.join()
     t.cancel()
     lcd.turn_backlight(1)
-    lcd.show_lcd('Thecus NAS', 'Ready')
+    lcd.show_lcd('Thecus NAS', 'NO MONITOR')
     print('')
     print('Exit script, GoodBye')
     exit(0)
 
 def backlight_ctrl():
-    global t, bltimer
+    global t, bltimer, menuloc, menuloc2, runthread
     bltimer += 1
-    if bltimer <= 3:
+    if bltimer <= 8:
         t = Timer(1, backlight_ctrl)
         t.start()
-    if bltimer > 3:
+    elif bltimer > 8 and bltimer <= 10:
+        if testmode == False:
+            menuloc = 0
+            menuloc2 = 0
+            if runthread == True:
+                runthread = False
+                t3.join()
+            lcd.show_lcd('THECUS NAS', 'SYS READY')
+        t = Timer(1, backlight_ctrl)
+        t.start()
+    elif bltimer > 10:
         bltimer = 0
         lcd.turn_backlight(0)
         t = Timer(1, backlight_ctrl)
@@ -70,30 +85,39 @@ def menuloop2(key):
     menu2_parse(menuloc2)
 
 def menu2_parse(key):
+    global t3, runthread
     hostname = socket.gethostname()
-    IPAddr :str = socket.gethostbyname(hostname)
+    IPAddr :str = socket.gethostbyname(hostname+'.')
     if key == 0:
-        lcd.show_lcd('Thecus NAS', 'Ready')
+        lcd.show_lcd('THECUS NAS', 'SYS READY')
     if key == 1:
-        lcd.show_lcd('Thecus NAS', 'IP: %s' % IPAddr)
+        lcd.show_lcd('IP:', IPAddr)
     if key == 2:
-        lcd.show_lcd('Thecus NAS', 'Hostname: %s' % hostname)
+        lcd.show_lcd('HOSTNAME:', hostname)
     if key == 3:
-        update_lcdval('CPU')
+        runthread = True
+        t3 = threading.Thread(target = update_lcdval, args = ('CPU',))
+        t3.start()
     if key == 4:
-        update_lcdval('SAS')
+        runthread = True
+        t3 = threading.Thread(target = update_lcdval, args = ('SAS',))
+        t3.start()
     if key == 5:
-        update_lcdval('FAN')
+        runthread = True
+        t3 = threading.Thread(target = update_lcdval, args = ('FAN',))
+        t3.start()
     if key == 6:
-        lcd.show_lcd('Thecus NAS', 'TEST Mode')
+        lcd.show_lcd('THECUS NAS', 'TEST MODE')
 
 def update_lcdval(name):
-    fp = open('/proc/hwm', 'r')
-    for line in fp:
-        if re.search(name, line):
-            line2 = line.strip()
-    fp.close()
-    lcd.show_lcd('Thecus NAS', line2)
+    while runthread == True:
+        fp = open('/proc/hwm', 'r')
+        for line in fp:
+            if re.search(name, line):
+                line2 = line.strip()
+        fp.close()
+        lcd.show_lcd('HW INFO', line2)
+
 
 def runfunc(num):
     global cmdlock
@@ -146,7 +170,7 @@ if __name__ == '__main__':
     print('Thecus Monitor. Press CTRL-C to exit.')
     lcd = ThecusLCD()
     lcd.clear_lcd()
-    lcd.show_lcd('Thecus NAS', 'Ready')
+    lcd.show_lcd('THECUS NAS', 'SYS READY')
     lcd.turn_backlight(1)
     os.system('echo "SLED 2 0 1" > /proc/hwm')
     t = Timer(1, backlight_ctrl)
@@ -154,6 +178,9 @@ if __name__ == '__main__':
     while True:
         read = lcd.readkey()
         if read == 'Enter':
+            if runthread == True:
+                runthread = False
+                t3.join()
             bltimer = 0
             lcd.turn_backlight(1)
             if menuloc2 == 6 and escstat == False and cmdlock == False and testmode == False:
@@ -167,11 +194,14 @@ if __name__ == '__main__':
                 t = Timer(1, backlight_ctrl)
                 t.start()
             elif escstat == True and cmdlock == False:
-                lcd.show_lcd('Thecus NAS', 'Ready')
+                lcd.show_lcd('THECUS NAS', 'SYS READY')
                 testmode = False
                 escstat = False
                 cmdlock = False
         elif read == 'Esc':
+            if runthread == True:
+                runthread = False
+                t3.join()
             bltimer = 0
             lcd.turn_backlight(1)
             if escstat == False and testmode == True:
@@ -181,6 +211,9 @@ if __name__ == '__main__':
                 escstat = False
                 lcd.show_lcd('Testing LCM & HW', menuloop(read))
         elif read == 'Up' or read == 'Down':
+            if runthread == True:
+                runthread = False
+                t3.join()
             bltimer = 0
             lcd.turn_backlight(1)
             if testmode == True:
@@ -188,4 +221,4 @@ if __name__ == '__main__':
             else:
                 menuloop2(read)
         else:
-            pass
+            lcd.show_lcd('THECUS NAS', 'LCM ERROR')
