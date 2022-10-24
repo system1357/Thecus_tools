@@ -221,5 +221,3 @@ if __name__ == '__main__':
                 lcd.show_lcd('Testing LCM & HW', menuloop(read))
             else:
                 menuloop2(read)
-        else:
-            lcd.show_lcd('THECUS NAS', 'LCM ERROR')
