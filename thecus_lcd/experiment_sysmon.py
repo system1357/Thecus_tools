@@ -1,6 +1,6 @@
 from time import sleep
 from ThecusLCD import ThecusLCD
-from signal import signal, SIGINT
+from signal import SIGTERM, signal, SIGINT
 from sys import exit
 import threading
 from threading import Timer
@@ -167,6 +167,7 @@ def runfunc(num):
 
 if __name__ == '__main__':
     signal(SIGINT, handler)
+    signal(SIGTERM, handler)
     print('Thecus Monitor. Press CTRL-C to exit.')
     lcd = ThecusLCD()
     lcd.clear_lcd()
