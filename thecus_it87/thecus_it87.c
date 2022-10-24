@@ -3544,7 +3544,7 @@ static int thecus_proc_it87_show(struct seq_file *m, void *v)
 
 	switch (type) {
 		case IT8616E_DEVID:
-			seq_printf(m,"HDD_FAN1 RPM: %d\n", FAN16_FROM_REG(data->fan[1][0]));
+			seq_printf(m,"FAN_RPM: %d\n", FAN16_FROM_REG(data->fan[1][0]));
 			seq_printf(m,"CPU_TEMP: %d\n",TEMP_FROM_REG(data->temp[0][0])/1000);
 			seq_printf(m,"SAS_TEMP: %d\n",TEMP_FROM_REG(data->temp[1][0])/1000);
 			seq_printf(m,"EUP: %x\n", it8616_EUP_status_read());

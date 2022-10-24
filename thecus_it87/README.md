@@ -8,7 +8,9 @@ Thecus uses a SuperIO IC that's not supported by the in-tree it87 kernel driver(
 - Name changed to thecus_it87 to prevent collision with in-tree driver
 
 ## Build
-install dkms first (build tools should also be installed)
+1. Install dkms (build tools should also be installed)  
+2. Install kernel headers package
+3. Issue below commands
 ```
 make clean
 make dkms
@@ -18,7 +20,7 @@ Monitoring and fan control can be carried out using lm-sensors
 - The fan of N4810 is at fan2/pwm2
 - The fan of N2810 should also be at fan2/pwm2 (not tested)
 
-Power LED control can be carried out using the below command
+Power LED control can be carried out using the below command  
 ```
 echo "SLED a b c" > /proc/hwm
 ```
