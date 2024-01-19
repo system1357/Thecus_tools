@@ -95,8 +95,6 @@ dkms:
 	@cp `pwd`/Makefile $(DKMS_ROOT_PATH)
 	@cp `pwd`/compat.h $(DKMS_ROOT_PATH)
 	@cp `pwd`/thecus_it87.c $(DKMS_ROOT_PATH)
-	@echo $(MODULE_TMP)
-	@echo $(word 1,$(MODULE_INFO))
 	@if [ "$(MODULE_INFO)" != "" ]; then\
 		echo "Remove current module: $(word 1,$(MODULE_INFO))";\
 		dkms remove $(word 1,$(MODULE_INFO)) --all;\
