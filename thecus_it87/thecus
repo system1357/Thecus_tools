@@ -1,0 +1,2 @@
+# turn on fan in full speed
+echo "REG 1 0x6b 0xFF" > /proc/hwm
