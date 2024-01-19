@@ -32,6 +32,10 @@ else
 DRIVER_VERSION := unknown
 endif
 
+MODULE_EXISTS := $(shell dkms status thecus_it87)
+COMMA := ,
+MODULE_INFO := $(subst :,,$(subst $(COMMA),,$(MODULE_EXISTS)))
+
 # DKMS
 DKMS_ROOT_PATH=/usr/src/$(DRIVER)-$(DRIVER_VERSION)
 MODPROBE_OUTPUT=$(shell lsmod | grep thecus_it87)
@@ -91,8 +95,14 @@ dkms:
 	@cp `pwd`/Makefile $(DKMS_ROOT_PATH)
 	@cp `pwd`/compat.h $(DKMS_ROOT_PATH)
 	@cp `pwd`/thecus_it87.c $(DKMS_ROOT_PATH)
+	@echo $(MODULE_TMP)
+	@echo $(word 1,$(MODULE_INFO))
+	@if [ "$(MODULE_INFO)" != "" ]; then\
+		echo "Remove current module: $(word 1,$(MODULE_INFO))";\
+		dkms remove $(word 1,$(MODULE_INFO)) --all;\
+	fi
 	@dkms add -m $(DRIVER) -v $(DRIVER_VERSION)
-	@dkms build -m $(DRIVER) -v $(DRIVER_VERSION)
+	@dkms build -m $(DRIVER) -v $(DRIVER_VERSION) --force
 	@dkms install --force -m $(DRIVER) -v $(DRIVER_VERSION)
 	@modprobe $(DRIVER)
 
