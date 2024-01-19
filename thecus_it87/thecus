@@ -1,0 +1,32 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:		thecus
+### END INIT INFO
+
+case "$1" in
+  start)
+	echo "REG 1 0x6b 0xFF" > /proc/hwm
+	;;
+  stop)
+	;;
+
+  reload|force-reload)
+	;;
+
+  restart)
+	;;
+
+  try-restart)
+	;;
+
+  status)
+	cat /proc/hwm
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/thecus {start|stop|reload|force-reload|restart|try-restart|status}" || true
+	exit 1
+esac
+
+exit 0
