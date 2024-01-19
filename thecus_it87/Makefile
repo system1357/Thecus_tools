@@ -101,7 +101,7 @@ dkms:
 		echo "Remove current module: $(word 1,$(MODULE_INFO))";\
 		dkms remove $(word 1,$(MODULE_INFO)) --all;\
 	fi
-	@dkms add -m $(DRIVER) -v $(DRIVER_VERSION)
+	dkms add -m $(DRIVER) -v $(DRIVER_VERSION)
 	@dkms build -m $(DRIVER) -v $(DRIVER_VERSION) --force
 	@dkms install --force -m $(DRIVER) -v $(DRIVER_VERSION)
 	@modprobe $(DRIVER)
@@ -112,3 +112,7 @@ dkms_clean:
 	fi
 	@dkms remove -m $(DRIVER) -v $(DRIVER_VERSION) --all
 	@rm -rf $(DKMS_ROOT_PATH)
+
+rc3:
+	@cp -f thecus /etc/init.d
+	@cd /etc/rc3.d ; ln -s ../init.d/thecus S02thecus
